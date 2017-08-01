@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "708605854605",
+    "firebase_url": "https://grub-picker-app.firebaseio.com",
+    "project_id": "grub-picker-app",
+    "storage_bucket": "grub-picker-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:708605854605:android:d2049d18fa294802",
+        "android_client_info": {
+          "package_name": "foodpicker.com.example.foodpicker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "708605854605-008f4tci0cisjbu3jcrghj4hhgm6svte.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "foodpicker.com.example.foodpicker",
+            "certificate_hash": "f8887c73d6ce2d3c8dc4c24a06b9be6eef8ed838"
+          }
+        },
+        {
+          "client_id": "708605854605-cgv09knurk513rumdkal7liu8irf4guu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDl-xWyitnptEsbQAVDqo6-W9f_K0nuSnM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "708605854605-cgv09knurk513rumdkal7liu8irf4guu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
