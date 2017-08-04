@@ -24,6 +24,10 @@ import com.google.firebase.database.ValueEventListener;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    // [START declare_database_ref]
+    private DatabaseReference mDatabase;
+    // [END declare_database_ref]
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,13 +100,19 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_camera) {
             // Handle the camera action
+            //Map marker activity
 
             Intent intent = new Intent(this, MapsMarkerActivity.class);
             startActivity(intent);
 
         } else if (id == R.id.nav_gallery) {
+            //Set location
+
+            Intent intent = new Intent(this, SetLocation.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_slideshow) {
+            //Auth activity
 
         } else if (id == R.id.nav_manage) {
 
