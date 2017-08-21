@@ -33,6 +33,16 @@
         </activity>
 
         <activity
+            android:name=".SignInActivity"
+            android:label="Sign in">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name=".MapsMarkerActivity"
             android:label="@string/title_activity_maps">
             <intent-filter>
