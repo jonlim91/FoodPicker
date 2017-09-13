@@ -21,6 +21,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
@@ -138,7 +139,20 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
                             Toast.makeText(SignInActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         } else {
+
+                            Log.w(TAG, "signInWasSuccessful, welcome " + mFirebaseAuth.getCurrentUser().getDisplayName() +
+                                    " [" +mFirebaseAuth.getCurrentUser().getEmail() + "]");
+                            FirebaseUser user = mFirebaseAuth.getCurrentUser();
+                            String username = user.getDisplayName();
+                            String email = user.getEmail();
                             startActivity(new Intent(SignInActivity.this, MainActivity.class));
+
+                            /*Intent intent = new Intent(SignInActivity.this, MainActivity.class);
+
+                            intent.putExtra("username", username);
+                            intent.putExtra("email", email);*/
+
+
                             finish();
                         }
                     }

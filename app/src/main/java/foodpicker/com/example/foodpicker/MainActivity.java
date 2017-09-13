@@ -21,7 +21,9 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
@@ -47,6 +49,7 @@ public class MainActivity extends AppCompatActivity
     public static final String ANONYMOUS = "anonymous";
     private static final String MESSAGE_SENT_EVENT = "message_sent";
     private String mUsername;
+    private String mUserEmail;
     private String mPhotoUrl;
     private SharedPreferences mSharedPreferences;
     private GoogleApiClient mGoogleApiClient;
@@ -58,6 +61,10 @@ public class MainActivity extends AppCompatActivity
     private ProgressBar mProgressBar;
     private EditText mMessageEditText;
     private ImageView mAddMessageImageView;
+
+    //get the nav drawer view
+    private NavigationView mNavigationView;
+    private View mHeaderView;
 
 
     // [START declare_database_ref]
@@ -73,6 +80,9 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mNavigationView = (NavigationView) findViewById(R.id.nav_view);
+        mHeaderView = mNavigationView.getHeaderView(0);
+
         // Set default username is anonymous.
         mUsername = ANONYMOUS;
 
@@ -81,14 +91,39 @@ public class MainActivity extends AppCompatActivity
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
         if (mFirebaseUser == null) {
             // Not signed in, launch the Sign In activity
+            Log.w("MainActivity", "user is null, launching sign in activity");
             startActivity(new Intent(this, SignInActivity.class));
+            Log.w("MainActivity", "finished launching sign in activity");
+
+            /*Bundle extras = getIntent().getExtras();
+            if(extras.containsKey("username")){
+                TextView user_name = (TextView) findViewById(R.id.username);
+                user_name.setText(extras.getString("username"));
+            }*/
+
             finish();
             return;
         } else {
+
+            //Do stuff with the signed in user's info
+
+            //Update the navigation bar with the user's name and email once they sign in
             mUsername = mFirebaseUser.getDisplayName();
+            mUserEmail = mFirebaseUser.getEmail();
             if (mFirebaseUser.getPhotoUrl() != null) {
                 mPhotoUrl = mFirebaseUser.getPhotoUrl().toString();
             }
+
+            //Log.w("MainActivity", "Welcome " + mUsername + " [" + mUserEmail + "]");
+
+
+            TextView user_name = (TextView) mHeaderView.findViewById(R.id.username);
+            TextView user_email = (TextView) mHeaderView.findViewById(R.id.useremail);
+            ImageView user_photo = (ImageView) mHeaderView.findViewById(R.id.userPhoto);
+
+            user_name.setText(mUsername);
+            user_email.setText(mUserEmail);
+
         }
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)

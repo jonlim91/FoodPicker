@@ -33,40 +33,32 @@
         </activity>
 
         <activity
-            android:name=".SignInActivity"
-            android:label="Sign in">
+            android:name=".SignInActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <activity
-            android:name=".MapsMarkerActivity"
-            android:label="@string/title_activity_maps">
+            android:name=".MapsMarkerActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <activity
-            android:name=".SetLocation"
-            android:label="@string/title_activity_maps">
+            android:name=".SetLocation">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <activity
-            android:name=".EmailPasswordActivity"
-            android:label="@string/title_activity_maps">
+            android:name=".EmailPasswordActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
