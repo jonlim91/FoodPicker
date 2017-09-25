@@ -33,6 +33,7 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.vision.text.Text;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -44,7 +45,9 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
 
     private static final String TAG = "SignInActivity";
     private static final int RC_SIGN_IN = 9001;
+    private static final int RC_ANON_SIGN_IN = 9002;
     private SignInButton mSignInButton;
+    private TextView mSkipSignIn;
 
     private GoogleApiClient mGoogleApiClient;
 
@@ -58,9 +61,11 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
 
         // Assign fields
         mSignInButton = (SignInButton) findViewById(R.id.sign_in_button);
+        mSkipSignIn = (TextView) findViewById(R.id.skip_signin);
 
         // Set click listeners
         mSignInButton.setOnClickListener(this);
+        mSkipSignIn.setOnClickListener(this);
         String webClientID = getString(R.string.default_web_client_id);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -94,6 +99,11 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
             case R.id.sign_in_button:
                 signIn();
                 break;
+            case R.id.skip_signin:
+                anonymousSignIn();
+                //Log.v("SignInActivity", "Starting anon sign in");
+
+                break;
             default:
                 return;
         }
@@ -102,6 +112,29 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
     private void signIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
+    private void anonymousSignIn() {
+        //Log.v("SignInActivity", "Starting anon sign in");
+        mFirebaseAuth.signInAnonymously()
+            .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful()) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d(TAG, "signInAnonymously:success");
+                        FirebaseUser user = mFirebaseAuth.getCurrentUser();
+                        startActivity(new Intent(SignInActivity.this, MainActivity.class));
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w(TAG, "signInAnonymously:failure", task.getException());
+                        Toast.makeText(SignInActivity.this, "Authentication failed.",
+                                Toast.LENGTH_SHORT).show();
+                    }
+
+                    // ...
+                }
+            });
     }
 
     @Override

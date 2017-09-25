@@ -110,6 +110,12 @@ public class MainActivity extends AppCompatActivity
             //Update the navigation bar with the user's name and email once they sign in
             mUsername = mFirebaseUser.getDisplayName();
             mUserEmail = mFirebaseUser.getEmail();
+
+            if(mUsername == null && mUserEmail == null){
+                mUsername = "Anonymous";
+                mUserEmail = "anon@anon.com";
+            }
+
             if (mFirebaseUser.getPhotoUrl() != null) {
                 mPhotoUrl = mFirebaseUser.getPhotoUrl().toString();
             }
