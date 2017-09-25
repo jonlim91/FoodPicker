@@ -90,4 +90,5 @@
     <string name="sign_up">Sign Up</string>
     <string name="fresh_config">Fresh Config</string>
     <string name="cause_crash">Cause Crash</string>
+    <string name="skip_sign_in_prompt"><b><u>Skip sign-in</u></b></string>
 </resources>
