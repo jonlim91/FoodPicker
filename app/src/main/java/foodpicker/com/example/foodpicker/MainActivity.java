@@ -216,10 +216,7 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
 
         } else if (id == R.id.nav_gallery) {
-            //Set location
 
-            Intent intent = new Intent(this, SetLocation.class);
-            startActivity(intent);
 
         } else if (id == R.id.nav_slideshow) {
             //Auth activity
