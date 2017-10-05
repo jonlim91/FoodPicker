@@ -17,6 +17,9 @@
     <item
         android:id="@+id/option_get_place"
         android:title="@string/option_get_place"
-        android:showAsAction="always"/>
+        android:showAsAction="always"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <!--Might have to change width and height for item-->
 
 </menu>
