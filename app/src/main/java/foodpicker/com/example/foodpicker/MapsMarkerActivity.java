@@ -3,9 +3,22 @@ package foodpicker.com.example.foodpicker;
 /**
  * Created by jonathanlim, Riki Verma on 8/1/17.
  */
+import android.content.Context;
+import android.content.IntentSender;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -60,7 +73,7 @@ import com.google.android.gms.maps.model.Marker;
  * An activity that displays a Google map with a marker (pin) to indicate a particular location.
  */
 public class MapsMarkerActivity extends AppCompatActivity
-        implements OnMapReadyCallback {
+        implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener {
 
 
     private static final String TAG = MapsMarkerActivity.class.getSimpleName();
@@ -71,14 +84,19 @@ public class MapsMarkerActivity extends AppCompatActivity
     private GeoDataClient mGeoDataClient;
     private PlaceDetectionClient mPlaceDetectionClient;
 
+    //Entry point for APIClient
+    private GoogleApiClient mGoogleApiClient;
+
     // The entry point to the Fused Location Provider.
     private FusedLocationProviderClient mFusedLocationProviderClient;
 
     // A default location (Sydney, Australia) and default zoom to use when location permission is
     // not granted.
     private final LatLng mDefaultLocation = new LatLng(-33.8523341, 151.2106085);
+    private final LatLng mIceland = new LatLng(	64.128288, -21.827774);
     private static final int DEFAULT_ZOOM = 15;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
+    private static final int REQUEST_CHECK_SETTINGS = 2;
     private boolean mLocationPermissionGranted;
 
     // The geographical location where the device is currently located. That is, the last-known
@@ -98,9 +116,7 @@ public class MapsMarkerActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        getLocationPermission();
-
-/*
+    /*
         super.onCreate(savedInstanceState);
         // Retrieve the content view that renders the map.
         setContentView(R.layout.activity_maps);
@@ -109,6 +125,13 @@ public class MapsMarkerActivity extends AppCompatActivity
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this); */
+
+    /*** 1 ***/
+
+        displayLocationSettingsRequest(this);
+        getLocationPermission();
+
+
 
         super.onCreate(savedInstanceState);
 
@@ -158,6 +181,8 @@ public class MapsMarkerActivity extends AppCompatActivity
 
         */
 
+        /*** 2 ***/
+
         mMap = map;
 
         // Use a custom info window adapter to handle multiple lines of text in the
@@ -187,7 +212,8 @@ public class MapsMarkerActivity extends AppCompatActivity
         });
 
         // Prompt the user for permission.
-        getLocationPermission();
+        //getLocationPermission();
+        //displayLocationSettingsRequest(this);
 
         // Turn on the My Location layer and the related control on the map.
         updateLocationUI();
@@ -197,7 +223,13 @@ public class MapsMarkerActivity extends AppCompatActivity
 
     }
 
-
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.connect();
+        }
+    }
 
     private void getLocationPermission() {
     /*
@@ -205,36 +237,58 @@ public class MapsMarkerActivity extends AppCompatActivity
      * device. The result of the permission request is handled by a callback,
      * onRequestPermissionsResult.
      */
+    /*** 3 ***/
+
+
+        Log.v(TAG, "Requesting location permission");
         if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             mLocationPermissionGranted = true;
+            Log.v(TAG, "Permission granted");
+
         } else {
             ActivityCompat.requestPermissions(this,
                     new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                     PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+            Log.v(TAG, "No permission");
+
         }
     }
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String permissions[],
                                            @NonNull int[] grantResults) {
+        /*** 4 ***/
+
+        /*Log.v(TAG, "Did we make it here?");
         mLocationPermissionGranted = false;
         switch (requestCode) {
             case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    mLocationPermissionGranted = true;
+                    *//*mLocationPermissionGranted = true;
+                    Log.v(TAG, "Permission granted, move the camera");*//*
+
+                    //showCurrentPlace();
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
+                }
+                else{
+                    Log.v(TAG, "Permission denied somehow, move the camera anyway");
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
                 }
             }
         }
-        updateLocationUI();
+        Log.v(TAG, "UPdating location UI in request permissions result");
+        updateLocationUI();*/
     }
 
     private void updateLocationUI() {
+        /*** 5 ***/
+
+        Log.v(TAG, "Updating location UI");
         if (mMap == null) {
             return;
         }
@@ -242,6 +296,7 @@ public class MapsMarkerActivity extends AppCompatActivity
             if (mLocationPermissionGranted) {
                 mMap.setMyLocationEnabled(true);
                 mMap.getUiSettings().setMyLocationButtonEnabled(true);
+                mMap.setOnMyLocationButtonClickListener(this);
             } else {
                 mMap.setMyLocationEnabled(false);
                 mMap.getUiSettings().setMyLocationButtonEnabled(false);
@@ -258,6 +313,10 @@ public class MapsMarkerActivity extends AppCompatActivity
      * Get the best and most recent location of the device, which may be null in rare
      * cases when a location is not available.
      */
+
+    /*** 6 ***/
+
+    Log.v(TAG, "Getting device location, mLocationPermissionGranted is " + mLocationPermissionGranted);
         try {
             if (mLocationPermissionGranted) {
                 Task locationResult = mFusedLocationProviderClient.getLastLocation();
@@ -273,11 +332,13 @@ public class MapsMarkerActivity extends AppCompatActivity
                                                 mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
                             }
                             else{
-                                Log.v("MapsMarkerActivity", "Whoops");
+                                //move to default location
+                                Log.v(TAG, "Oopsie!");
+                                //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mIceland, DEFAULT_ZOOM));
 
                             }
                         } else {
-                            Log.d(TAG, "Current location is null. Using defaults.");
+                            Log.v(TAG, "Current location is null. Using defaults.");
                             Log.e(TAG, "Exception: %s", task.getException());
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
                             mMap.getUiSettings().setMyLocationButtonEnabled(false);
@@ -292,13 +353,19 @@ public class MapsMarkerActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.option_get_place) {
+        /*** 7 ***/
+
+        Log.v(TAG, "Options item selected from menu");
+        /*if (item.getItemId() == R.id.option_get_place) {
             showCurrentPlace();
-        }
+        }*/
         return true;
     }
 
     private void showCurrentPlace() {
+        /*** 8 ***/
+
+        Log.v(TAG, "Showing current place");
         if (mMap == null) {
             return;
         }
@@ -350,7 +417,8 @@ public class MapsMarkerActivity extends AppCompatActivity
 
                                 // Show a dialog offering the user the list of likely places, and add a
                                 // marker at the selected place.
-                                openPlacesDialog();
+                                /***comment out for now***/
+                                //openPlacesDialog();
 
                             } else {
                                 Log.e(TAG, "Exception: %s", task.getException());
@@ -373,6 +441,9 @@ public class MapsMarkerActivity extends AppCompatActivity
     }
 
     private void openPlacesDialog() {
+        /*** 9 ***/
+
+        Log.v(TAG, "Open places dialog");
         // Ask the user to choose the place where they are now.
         DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
             @Override
@@ -406,11 +477,79 @@ public class MapsMarkerActivity extends AppCompatActivity
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
+        /*** 10 ***/
+
         if (mMap != null) {
             outState.putParcelable(KEY_CAMERA_POSITION, mMap.getCameraPosition());
             outState.putParcelable(KEY_LOCATION, mLastKnownLocation);
             super.onSaveInstanceState(outState);
         }
+    }
+
+    private void displayLocationSettingsRequest(Context context) {
+        /*** 11 ***/
+
+        mGoogleApiClient = new GoogleApiClient.Builder(context)
+                .addApi(LocationServices.API).build();
+        mGoogleApiClient.connect();
+
+        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(10000);
+        locationRequest.setFastestInterval(10000 / 2);
+
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
+        builder.setAlwaysShow(true);
+
+        PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi.checkLocationSettings(mGoogleApiClient, builder.build());
+        result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
+            @Override
+            public void onResult(LocationSettingsResult result) {
+                final Status status = result.getStatus();
+                switch (status.getStatusCode()) {
+                    case LocationSettingsStatusCodes.SUCCESS:
+                        Log.i(TAG, "All location settings are satisfied.");
+                        break;
+                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                        Log.i(TAG, "Location settings are not satisfied. Show the user a dialog to upgrade location settings ");
+
+                        try {
+                            // Show the dialog by calling startResolutionForResult(), and check the result
+                            // in onActivityResult().
+                            status.startResolutionForResult(MapsMarkerActivity.this, REQUEST_CHECK_SETTINGS);
+                            //getDeviceLocation();
+                            //Log.v(TAG, "Did we check the location here");
+                            //showCurrentPlace();
+                        } catch (IntentSender.SendIntentException e) {
+                            Log.i(TAG, "PendingIntent unable to execute request.");
+                        }
+                        break;
+                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                        Log.i(TAG, "Location settings are inadequate, and cannot be fixed here. Dialog not created.");
+                        break;
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CHECK_SETTINGS){
+            if (resultCode == RESULT_OK){
+                Log.v(TAG, "OK HERE");
+                getDeviceLocation();
+            }
+
+        }
+    }
+
+    @Override
+    public boolean onMyLocationButtonClick() {
+        Toast.makeText(this, "MyLocation button clicked", Toast.LENGTH_SHORT).show();
+        // Return false so that we don't consume the event and the default behavior still occurs
+        // (the camera animates to the user's current position).
+        return true;
     }
 
 

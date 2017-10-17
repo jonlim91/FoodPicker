@@ -6,9 +6,18 @@
     android:layout_height="match_parent"
     tools:context="foodpicker.com.example.foodpicker.MainActivity">
 
-    <fragment
-        android:id="@+id/place_autocomplete_fragment"
-        android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:layout_marginRight="60dp">
+
+        <fragment
+            android:id="@+id/place_autocomplete_fragment"
+            android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <!-- Setting right margin so it doesn't overlap with location button-->
+    </FrameLayout>
+
 </fragment>
