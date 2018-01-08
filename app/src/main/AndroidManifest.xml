@@ -21,6 +21,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
+        <!-- Temporarily comment out the main activity to test FoodPickerActivity from TicTacToe example
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
@@ -28,6 +29,14 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>-->
+
+        <!-- TicTacToeActivity from example, renamed FoodPickerActivity -->
+        <activity android:name=".view.FoodPickerActivity" android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

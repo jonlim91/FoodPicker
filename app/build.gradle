@@ -46,6 +46,9 @@ dependencies {
     // Google Sign In SDK (only required for Google Sign In)
     compile 'com.google.android.gms:play-services-auth:11.2.0'
 
+    //Firebase Invites/Dynamic Links
+    compile 'com.google.android.gms:play-services-appinvite:11.2.0'
+
 
     // Firebase UI
     // Used in FirebaseUIActivity. The FirebaseUI-Android library has a minSdk level of 16
