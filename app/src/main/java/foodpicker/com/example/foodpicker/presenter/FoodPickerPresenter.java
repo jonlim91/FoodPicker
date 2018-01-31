@@ -1,5 +1,7 @@
 package foodpicker.com.example.foodpicker.presenter;
 
+import android.util.Log;
+
 import foodpicker.com.example.foodpicker.model.Board;
 import foodpicker.com.example.foodpicker.model.Player;
 import foodpicker.com.example.foodpicker.view.FoodPickerView;
@@ -51,6 +53,10 @@ public class FoodPickerPresenter implements Presenter {
         view.clearWinnerDisplay();
         view.clearButtons();
         model.restart();
+    }
+
+    public void sayHi() {
+        Log.v("FoodPickerPresenter", "hi");
     }
 
 
