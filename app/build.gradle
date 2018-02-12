@@ -5,11 +5,11 @@ android {
     buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "foodpicker.com.example.foodpicker"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "android.support.foodpicker.com.example.foodpicker.test.runner.AndroidJUnitRunner"
         resValue "string", "google_maps_key", (project.findProperty("GOOGLE_MAPS_API_KEY") ?: "")
         multiDexEnabled true
     }
@@ -23,17 +23,20 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+
+    //Commented out the espresso dependency because it kept breaking my gradle
+    //androidTestCompile('com.android.support.foodpicker.com.example.foodpicker.test.espresso:espresso-core:3.+', {
+    /*androidTestCompile('com.android.support.foodpicker.com.example.foodpicker.test.espresso:espresso-core:3.0.1', {
         exclude group: 'com.android.support', module: 'support-annotations'
-    })
+    })*/
     compile 'com.android.support:appcompat-v7:26.+'
     compile 'com.android.support:design:26.+'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     //compile 'com.google.firebase:firebase-database:11.0.4'
-    compile 'com.google.firebase:firebase-database:11.2.0'
-    compile 'com.google.android.gms:play-services-appinvite:11.2.0'
+    compile 'com.google.firebase:firebase-database:11.8.0'
+    compile 'com.google.android.gms:play-services-appinvite:11.8.0'
     //compile 'com.google.android.gms:play-services:11.0.4'
-    /**/compile 'com.google.android.gms:play-services:11.2.0'
+    /**/compile 'com.google.android.gms:play-services:11.8.0'
     testCompile 'junit:junit:4.12'
 
     compile 'com.android.support:animated-vector-drawable:26+'
@@ -42,29 +45,44 @@ dependencies {
 
     // Firebase Authentication
     //compile 'com.google.firebase:firebase-auth:11.0.4'
-    compile 'com.google.firebase:firebase-auth:11.2.0'
+    compile 'com.google.firebase:firebase-auth:11.8.0'
     // Google Sign In SDK (only required for Google Sign In)
-    compile 'com.google.android.gms:play-services-auth:11.2.0'
+    compile 'com.google.android.gms:play-services-auth:11.8.0'
 
     //Firebase Invites/Dynamic Links
-    compile 'com.google.android.gms:play-services-appinvite:11.2.0'
+    compile 'com.google.android.gms:play-services-appinvite:11.8.0'
 
-
-    // Firebase UI
+    /*
+     *
+     Firebase UI
+     *
+    */
     // Used in FirebaseUIActivity. The FirebaseUI-Android library has a minSdk level of 16
     // so this library is only included in the minSdkJellybean variant.
     //minSdkJellybeanCompile 'com.firebaseui:firebase-ui-auth:1.2.0'
+    implementation 'com.firebaseui:firebase-ui-auth:3.2.1'
+
+
+    implementation 'com.github.bumptech.glide:glide:4.4.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.4.0'
+    // The following dependencies are not required to use the Firebase UI library.
+    // They are used to make some aspects of the demo app implementation simpler for
+    // demonstrative purposes, and you may find them useful in your own apps; YMMV.
+    implementation 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+
 
     // Facebook Android SDK (only required for Facebook Login)
     // Used in FacebookLoginActivity. This is only compiled into the minSdkJellybean variant of this
-    // app. You can build a 'minSdkGingerbread' variant to test on devices with 9 <= SDK <= 15.
+    // app. You can build a 'minSdkGingerbread' variant to foodpicker.com.example.foodpicker.test on devices with 9 <= SDK <= 15.
     //minSdkJellybeanCompile 'com.facebook.android:facebook-android-sdk:4.9.0'
     //minSdkJellybeanCompile 'com.android.support:customtabs:26+'
     //   compile 'com.google.android.gms:play-services-maps:11.4.0'
-    compile 'com.google.android.gms:play-services-maps:11.2.0'
-    compile 'com.google.android.gms:play-services-places:11.2.0'
+    compile 'com.google.android.gms:play-services-maps:11.8.0'
+    compile 'com.google.android.gms:play-services-places:11.8.0'
     //compile 'com.google.android.gms:play-services:11.2.0'
-    compile 'com.google.android.gms:play-services-location:11.2.0'
+    compile 'com.google.android.gms:play-services-location:11.8.0'
+    compile 'com.android.support:mediarouter-v7:26.+'
 }
 
 

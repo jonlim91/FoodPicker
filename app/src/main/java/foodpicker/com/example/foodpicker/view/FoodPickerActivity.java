@@ -14,10 +14,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import foodpicker.com.example.foodpicker.MapsMarkerActivity;
 import foodpicker.com.example.foodpicker.R;
+import foodpicker.com.example.foodpicker.auth.AuthUiActivity;
 import foodpicker.com.example.foodpicker.presenter.FoodPickerPresenter;
 
 //import foodpicker.com.example.foodpicker.R;
@@ -25,6 +27,7 @@ import foodpicker.com.example.foodpicker.presenter.FoodPickerPresenter;
 public class FoodPickerActivity extends AppCompatActivity implements FoodPickerView, NavigationView.OnNavigationItemSelectedListener {
 
     private static String TAG = FoodPickerActivity.class.getName();
+    public static final String EXTRA_MESSAGE = TAG;
 
     private Toolbar toolbar;
 
@@ -32,13 +35,17 @@ public class FoodPickerActivity extends AppCompatActivity implements FoodPickerV
     private View winnerPlayerViewGroup;
     private TextView winnerPlayerLabel;
 
+
     FoodPickerPresenter presenter = new FoodPickerPresenter(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //setContentView(R.layout.foodpickerpresenter_main);
         //actionBar.setTitle("title");
+        presenter.sayHi();
         setContentView(R.layout.activity_main);
+
 
         //Set title for Nav drawer's default action bar
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -50,25 +57,44 @@ public class FoodPickerActivity extends AppCompatActivity implements FoodPickerV
         winnerPlayerViewGroup = findViewById(R.id.winnerPlayerViewGroup);
         buttonGrid = (ViewGroup) findViewById(R.id.buttonGrid);*/
 
-        presenter.onCreate();
+        //callPresenterOnCreate();
+
+        //Tell presenter to check if user is signed in, if not signed in call sign in activity
+        if(presenter.isUserSignedIn()){
+
+            setContentView(R.layout.activity_main);
+            Log.d(TAG, "User is signed in");
+        }
+        else{
+            //presenter.signInUser();
+            Log.d(TAG, "User isn't signed in");
+            Intent intent = new Intent(this, AuthUiActivity.class);
+            startActivity(intent);
+        }
+
+        //presenter.onCreate(savedInstanceState);
+    }
+
+    private void callPresenterOnCreate() {
+        presenter.onCreate(new Bundle());
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        presenter.onPause();
+        //presenter.onPause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        presenter.onResume();
+        //presenter.onResume();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        presenter.onDestroy();
+        //presenter.onDestroy();
     }
 
     /*@Override
@@ -110,6 +136,7 @@ public class FoodPickerActivity extends AppCompatActivity implements FoodPickerV
                 mUsername = ANONYMOUS;
                 startActivity(new Intent(this, SignInActivity.class));
                 finish();*/
+                presenter.signOutUser();
                 return true;
             case R.id.action_settings:
                 return true;
@@ -192,4 +219,14 @@ public class FoodPickerActivity extends AppCompatActivity implements FoodPickerV
     }
 
     public void test(){}
+
+    public void sendMessage(View v) {
+        presenter.sayHi();
+        Intent intent = new Intent();
+        intent.setClassName("foodpicker.com.example.foodpicker", "foodpicker.com.example.foodpicker.presenter.FoodPickerPresenter");
+        EditText editText = (EditText) findViewById(R.id.editText);
+        String message = editText.getText().toString();
+        intent.putExtra(EXTRA_MESSAGE, message);
+        startActivity(intent);
+    }
 }
