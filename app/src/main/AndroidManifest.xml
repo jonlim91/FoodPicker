@@ -5,7 +5,6 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -21,13 +20,25 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity
+        <!-- Temporarily comment out the main activityfoodpicker.com.example.foodpicker.testtest FoodPickerActivity from TicTacToe example -->
+<!--        <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>-->
+
+        <!-- TicTacToeActivity from example, renamed FoodPickerActivity -->
+        <activity
+            android:name=".view.FoodPickerActivity"
+            android:screenOrientation="portrait"
+            style="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -50,6 +61,38 @@
 
         <activity
             android:name=".EmailPasswordActivity">
+            <intent-filter>
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="foodpicker.com.example.foodpicker.presenter.FoodPickerPresenter">
+            <intent-filter>
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="foodpicker.com.example.foodpicker.auth.AuthUiActivity"
+            android:parentActivityName=".presenter.FoodPickerPresenter">
+            <intent-filter>
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="foodpicker.com.example.foodpicker.auth.SignedInActivity">
+            <intent-filter>
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="foodpicker.com.example.foodpicker.SampleSignedIn">
             <intent-filter>
 
                 <category android:name="android.intent.category.LAUNCHER" />
