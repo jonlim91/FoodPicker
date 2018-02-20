@@ -149,14 +149,16 @@ public class FoodPickerPresenter extends AppCompatActivity implements Presenter 
     }
 
     public void signOutUser(){
-        Log.d(TAG, "Signing out the user, is currently: " + mFirebaseAuth.getCurrentUser().getDisplayName().toString());
-        mFirebaseAuth.signOut();
+
+        if(mFirebaseAuth.getCurrentUser() != null) {
+            Log.d(TAG, "Signing out the user, is currently: " + mFirebaseAuth.getCurrentUser().getDisplayName().toString());
+            mFirebaseAuth.signOut();
+        }
         Log.d(TAG, "User should now be null, is: " + mFirebaseAuth.getCurrentUser());
         //Auth.GoogleSignInApi.signOut(mGoogleApiClient);
         mUsername = ANONYMOUS;
-        Intent intent = new Intent(this, AuthUiActivity.class);
-        //startActivity(intent);
-        /*intent.setClassName("foodpicker.com.example.foodpicker", "foodpicker.com.example.foodpicker.view.FoodPickerActivity");
+       /* Intent intent = new Intent();
+        intent.setClassName("foodpicker.com.example.foodpicker", "foodpicker.com.example.foodpicker.view.FoodPickerActivity");
         startActivity(intent);*/
         finish();
     }

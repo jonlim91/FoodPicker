@@ -24,6 +24,7 @@ import android.support.annotation.StyleRes;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -38,6 +39,7 @@ import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.common.Scopes;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -49,7 +51,7 @@ import butterknife.OnClick;
 import foodpicker.com.example.foodpicker.R;
 import foodpicker.com.example.foodpicker.SampleSignedIn;
 
-//import foodpicker.com.example.foodpicker.R;
+//import foodpicker.com.example.foodpicker.presenter.FoodPickerPresenter;
 
 public class AuthUiActivity extends AppCompatActivity {
     private static final String UNCHANGED_CONFIG_VALUE = "CHANGE-ME";
@@ -199,7 +201,27 @@ public class AuthUiActivity extends AppCompatActivity {
 
     @OnClick(R.id.sign_in)
     public void signIn(View view) {
+        // Choose authentication providers
+        List<AuthUI.IdpConfig> providers = Arrays.asList(
+                new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),
+                new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
+                new AuthUI.IdpConfig.Builder(AuthUI.PHONE_VERIFICATION_PROVIDER).build());
+
+        // Create and launch sign-in intent
         startActivityForResult(
+                AuthUI.getInstance()
+                        .createSignInIntentBuilder()
+                        .setAvailableProviders(providers)
+                        .build(),
+                RC_SIGN_IN);
+        /*FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            Log.d("AuthUiActivity", "Username is: " + user.getDisplayName().toString());
+
+        }
+        else Log.d("AuthUiActivity", "woops, fucked up here");*/
+
+        /*startActivityForResult(
                 AuthUI.getInstance().createSignInIntentBuilder()
                         .setTheme(getSelectedTheme())
                         .setLogo(getSelectedLogo())
@@ -210,14 +232,29 @@ public class AuthUiActivity extends AppCompatActivity {
                                 mEnableHintSelector.isChecked())
                         .setAllowNewEmailAccounts(mAllowNewEmailAccounts.isChecked())
                         .build(),
-                RC_SIGN_IN);
+                RC_SIGN_IN);*/
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_SIGN_IN) {
-            handleSignInResponse(resultCode, data);
+
+            IdpResponse response = IdpResponse.fromResultIntent(data);
+
+            if (resultCode == RESULT_OK) {
+                // Successfully signed in
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                if(user!=null) {
+                    Log.d("AuthUiActivity", "Username is: " + user.getDisplayName().toString());
+                }
+            } else {
+                // Sign in failed, check response for error code
+                // ...
+            }
+            /*TODO: Commenting this out for now*/
+            Log.d("AuthUiActivity", "onActivityResult end");
+            //handleSignInResponse(resultCode, data);
             return;
         }
 
@@ -229,7 +266,8 @@ public class AuthUiActivity extends AppCompatActivity {
         super.onResume();
         FirebaseAuth auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() != null) {
-            startSignedInActivity(null);
+            /*TODO: Commenting this out for now*/
+            //startSignedInActivity(null);
             finish();
         }
     }
@@ -265,6 +303,7 @@ public class AuthUiActivity extends AppCompatActivity {
         showSnackbar(R.string.unknown_sign_in_response);
     }
 
+    //Starts SignedInActivity with the requested params
     private void startSignedInActivity(IdpResponse response) {
         startActivity(
                 SignedInActivity.createIntent(

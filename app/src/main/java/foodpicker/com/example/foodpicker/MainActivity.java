@@ -120,8 +120,8 @@ public class MainActivity extends AppCompatActivity
             //Log.w("MainActivity", "Welcome " + mUsername + " [" + mUserEmail + "]");
 
 
-            TextView user_name = (TextView) mHeaderView.findViewById(R.id.username);
-            TextView user_email = (TextView) mHeaderView.findViewById(R.id.useremail);
+            TextView user_name = (TextView) mHeaderView.findViewById(R.id.user_display_name);
+            TextView user_email = (TextView) mHeaderView.findViewById(R.id.user_email);
             ImageView user_photo = (ImageView) mHeaderView.findViewById(R.id.userPhoto);
 
             user_name.setText(mUsername);

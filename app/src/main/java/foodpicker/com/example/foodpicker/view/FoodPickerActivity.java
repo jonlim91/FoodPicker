@@ -15,7 +15,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import foodpicker.com.example.foodpicker.MapsMarkerActivity;
 import foodpicker.com.example.foodpicker.R;
@@ -35,6 +39,20 @@ public class FoodPickerActivity extends AppCompatActivity implements FoodPickerV
     private View winnerPlayerViewGroup;
     private TextView winnerPlayerLabel;
 
+    //get the nav drawer view
+    private NavigationView mNavigationView;
+    private View mHeaderView;
+
+    //Nav drawer fields
+    //@BindView(R.id.user_profile_picture)
+    ImageView mUserProfilePicture;
+
+    //@BindView(R.id.user_email)
+    TextView mUserEmail;
+
+    //@BindView(R.id.user_display_name)
+    TextView mUserDisplayName;
+
 
     FoodPickerPresenter presenter = new FoodPickerPresenter(this);
 
@@ -43,8 +61,12 @@ public class FoodPickerActivity extends AppCompatActivity implements FoodPickerV
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.foodpickerpresenter_main);
         //actionBar.setTitle("title");
-        presenter.sayHi();
+        //presenter.sayHi();
+        //setContentView(R.layout.activity_main);
         setContentView(R.layout.activity_main);
+
+        mNavigationView = (NavigationView) findViewById(R.id.nav_view);
+        mHeaderView = mNavigationView.getHeaderView(0);
 
 
         //Set title for Nav drawer's default action bar
@@ -68,9 +90,9 @@ public class FoodPickerActivity extends AppCompatActivity implements FoodPickerV
         else{
             //presenter.signInUser();
             Log.d(TAG, "User isn't signed in");
-            Intent intent = new Intent(this, AuthUiActivity.class);
-            startActivity(intent);
+            callAuthUiActivity();
         }
+        populateProfile();
 
         //presenter.onCreate(savedInstanceState);
     }
@@ -137,6 +159,9 @@ public class FoodPickerActivity extends AppCompatActivity implements FoodPickerV
                 startActivity(new Intent(this, SignInActivity.class));
                 finish();*/
                 presenter.signOutUser();
+                presenter.sayHi();
+                //presenter.signInUser();
+                callAuthUiActivity();
                 return true;
             case R.id.action_settings:
                 return true;
@@ -228,5 +253,24 @@ public class FoodPickerActivity extends AppCompatActivity implements FoodPickerV
         String message = editText.getText().toString();
         intent.putExtra(EXTRA_MESSAGE, message);
         startActivity(intent);
+    }
+
+    public void callAuthUiActivity(){
+        //call AuthUiActivity from the view activity for now, will fix to make presenter call this later
+        Intent intent = new Intent(this, AuthUiActivity.class);
+        startActivity(intent);
+    }
+
+    private void populateProfile() {
+        Log.d(TAG, "Calling populateProfile()");
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user != null){
+            Log.d(TAG, "Your username is: " + user.getDisplayName().toString());
+            mUserEmail = (TextView) findViewById(R.id.user_email);
+            mUserEmail.setText("Jon");
+            //mUserEmail.setText(TextUtils.isEmpty(user.getEmail()) ? "No email" : user.getEmail());
+            //mUserDisplayName.setText(TextUtils.isEmpty(user.getDisplayName()) ? "No display name" : user.getDisplayName());
+        }
+        else{ Log.d(TAG, "Shit, fucked up");}
     }
 }
